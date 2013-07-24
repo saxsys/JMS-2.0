@@ -5,30 +5,18 @@ import javax.inject.Inject;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 
-import de.saxsys.jms.server.jms.MessageConsumerSync;
-import de.saxsys.jms.server.jms.MessageProducer;
+import de.saxsys.jms.server.jms.Sender;
 
 @Stateless
 @Path("jms")
 public class MyResource {
 
 	@Inject
-	private MessageProducer messageProducer;
-
-	@Inject
-	private MessageConsumerSync messageConsumer;
+	private Sender sender;
 
 	@Path("send")
 	@GET
 	public String produce() {
-		messageProducer.sendMessage();
-		return "Sent";
-	}
-
-	@Path("receive")
-	@GET
-	public String consume() {
-		messageConsumer.receiveMessage();
-		return "Received";
+		return sender.sendMessage();
 	}
 }

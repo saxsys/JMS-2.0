@@ -4,6 +4,8 @@ import javax.annotation.Resource;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.jms.JMSContext;
+import javax.jms.JMSException;
+import javax.jms.Message;
 import javax.jms.Topic;
 
 @Stateless
@@ -16,6 +18,11 @@ public class ReceiverSync {
 	private JMSContext context;
 
 	public String receive() {
-		return context.createConsumer(topic).receiveBody(String.class);
+		Message message = context.createConsumer(topic).receive();
+		try {
+			return message.getBody(String.class) + " " + message.getJMSExpiration();
+		} catch (JMSException e) {
+			return "ERROR";
+		}
 	}
 }

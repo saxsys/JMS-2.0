@@ -5,6 +5,7 @@ import java.util.Date;
 import javax.annotation.Resource;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
+import javax.jms.DeliveryMode;
 import javax.jms.JMSContext;
 import javax.jms.Topic;
 
@@ -19,7 +20,12 @@ public class Sender {
 
 	public String sendMessage() {
 		String text = "Hey, it's " + new Date();
-		context.createProducer().send(topic, text);
+		context.createProducer() //
+				.setPriority(1) //
+				.setTimeToLive(5000) //
+				.setDeliveryMode(DeliveryMode.NON_PERSISTENT) //
+				.setProperty("currentTemperature", 32) //
+				.send(topic, text);
 		return text;
 	}
 }
